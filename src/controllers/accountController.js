@@ -12,7 +12,7 @@ export default {
             res.json(resMsg);
         } catch (e) {
             console.error(e);
-            res.json({ message: `Something is wrong`, error: e });
+            res.json({ message: `Something went wrong`, error: e });
         }
     },
     create: async (req, res) => {
@@ -30,7 +30,7 @@ export default {
             res.json({ message: 'Account Created!' });
         } catch (e) {
             console.error(e);
-            res.json({ message: `Something is wrong`, error: e });
+            res.json({ message: `Something went wrong`, error: e });
         }
     },
     delete: async (req, res) => {
@@ -44,7 +44,27 @@ export default {
             res.json(resMsg);
         } catch (e) {
             console.error(e);
-            res.json({ message: `Something is wrong`, error: e });
+            res.json({ message: `Something went wrong`, error: e });
+        }
+    },
+    update: async (req, res) => {
+        try {
+            const { params: { id }, body: { name, email, password } } = req;
+
+            const userToBeUpdated = {
+                name,
+                email,
+                password: encryptString(password)
+            };
+
+            const user = await User.findByIdAndUpdate(id, userToBeUpdated);
+
+            const resMsg = user ? { message: 'Account updated!', username: user.name } : { message: 'User not found!' };
+
+            res.json(resMsg);
+        } catch (e) {
+            console.error(e);
+            res.json({ message: `Something went wrong`, error: e });
         }
     }
 };
